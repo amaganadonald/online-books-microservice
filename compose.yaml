@@ -1,0 +1,31 @@
+services:
+  eureka-server:
+    #image: book-shop-discovery-service:v1
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+    container_name: DISCOVERY-SERVICE
+    ports:
+      - '8761:8761'
+    expose:
+      - '8761'
+    networks:
+      - book-shop-network
+
+  config-service:
+    #image: book-shop-config-service:v1
+    build: ./config-server
+    container_name: CONFIG-SERVICE
+    restart: always
+    ports:
+      - '9899:9899'
+    networks:
+      - book-shop-network
+    environment:
+      DISCOVERY-SERVICE-URL: http://eureka-server:8761/eureka
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    depends_on:
+      - eureka-server
+
+networks:
+  book-shop-network:

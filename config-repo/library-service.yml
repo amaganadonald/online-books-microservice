@@ -1,0 +1,28 @@
+library:
+  params:
+    x: 3
+    y: 4
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE2_URL}
+    username: ${SPRING_DATASOURCE2_USERNAME}
+    password: ${SPRING_DATASOURCE2_PASSWORD}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      myServiceCircuitBreaker:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        eventConsumerBufferSize: 10
+        recordExceptions:
+          - java.io.IOException
+          - java.util.concurrent.TimeoutException
+        ignoreExceptions:
+          - com.example.MyCustomException

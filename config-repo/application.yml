@@ -1,0 +1,45 @@
+global:
+  params:
+    x: 1
+    y: 2
+
+spring:
+  cloud:
+    discovery:
+      enabled: true
+    config:
+      enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+        generate_statistics: true
+
+    show-sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  health:
+    refresh:
+      enabled: true
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        orm:
+          jdbc:
+            bind: TRACE
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${DISCOVERY-SERVICE-URL}:http://localhost:8761/eureka/

@@ -11,6 +11,9 @@ services:
       - '8761'
     networks:
       - book-shop-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
 
   config-service:
     #image: book-shop-config-service:v1
@@ -25,7 +28,8 @@ services:
       DISCOVERY-SERVICE-URL: http://eureka-server:8761/eureka
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
 
 networks:
   book-shop-network:

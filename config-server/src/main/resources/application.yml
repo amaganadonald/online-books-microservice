@@ -1,22 +1,22 @@
 spring:
   application:
     name: CONFIG-SERVER
-cloud:
-  config:
-    server:
-      git:
-        uri: https://github.com/amaganadonald/book-configuration.git
-        clone-on-start: true
-        default-label: main
-      native:
-        search-locations: https://github.com/amaganadonald/book-configuration.git
-        composite:
-          - type: git
-            uri: https://github.com/amaganadonald/book-configuration.git
-            clone-on-start: true
-            default-label: main
-          - type: native
-            search-locations: https://github.com/amaganadonald/book-configuration.git
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/amaganadonald/book-configuration.git
+          clone-on-start: true
+          default-label: main
+        native:
+          search-locations: https://github.com/amaganadonald/book-configuration.git
+          composite:
+            - type: git
+              uri: https://github.com/amaganadonald/book-configuration.git
+              clone-on-start: true
+              default-label: main
+            - type: native
+              search-locations: https://github.com/amaganadonald/book-configuration.git
   discovery:
     enabled: true
 server:

@@ -1,0 +1,109 @@
+services:
+  eureka-server:
+    #image: book-shop-discovery-service:v1
+    build:
+      context: ./discovery-service
+      dockerfile: Dockerfile
+    container_name: DISCOVERY-SERVICE
+    ports:
+      - '8761:8761'
+    expose:
+      - '8761'
+    networks:
+      - book-shop-network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 10s
+
+  config-service:
+    #image: book-shop-config-service:v1
+    build: ./config-server
+    container_name: CONFIG-SERVICE
+    restart: always
+    ports:
+      - '9899:9899'
+    networks:
+      - book-shop-network
+    environment:
+      DISCOVERY-SERVICE-URL: http://eureka-server:8761/eureka
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+  postgres:
+    image: 'postgres'
+    container_name: 'postgres'
+    environment:
+      - 'POSTGRES_DB=settings-service'
+      - 'POSTGRES_PASSWORD=donald'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5432:5432'
+    networks:
+      - book-shop-network
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - postgresql_data:/var/lib/postgresql/data
+
+  postgresdb:
+    image: 'postgres'
+    container_name: 'postgres-library'
+    environment:
+      - 'POSTGRES_DB=library-service'
+      - 'POSTGRES_PASSWORD=evrard'
+      - 'POSTGRES_USER=postgres'
+    ports:
+      - '5433:5432'
+    networks:
+      - book-shop-network
+    volumes:
+      - postgres_data1:/var/lib/postgresql/data
+
+  pgadmin4:
+    image: 'elestio/pgadmin'
+    container_name: 'pgadmin'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: donald9do@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: donald
+      PGADMIN_LISTEN_PORT: 4000
+    ports:
+      - '4000:4000'
+    networks:
+      - book-shop-network
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
+    depends_on:
+      - postgres
+
+  settings-service:
+    build: ./settings-service
+    container_name: SETTINGS-SERVICE
+    restart: always
+    ports:
+      - '9891:9891'
+    expose:
+      - '9891'
+    networks:
+      - book-shop-network
+    depends_on:
+      config-service:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9891/actuator/health" ]
+      interval: 10s
+
+    environment:
+      CONFIG_SERVICE_URI: http://config-service:9899
+      DISCOVERY-SERVICE-URL: http://eureka-server:8761/eureka
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/settings-service
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: donald
+
+volumes:
+  postgresql:
+  postgresql_data:
+  postgres_data1:
+
+networks:
+  book-shop-network:

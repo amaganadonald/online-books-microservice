@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: SETTINGS-SERVICE
+  config:
+    #import: optional:configserver:http://localhost:9899
+    import: optional:configserver:${CONFIG_SERVICE_URI}
+    cloud:
+      config:
+        uri: ${CONFIG_SERVICE_URI}
+        #uri: http://localhost:9899
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    #url: jdbc:postgresql://localhost:5432/settings-service
+    #username: postgres
+    #password: donald
+
+server:
+  port: 9891

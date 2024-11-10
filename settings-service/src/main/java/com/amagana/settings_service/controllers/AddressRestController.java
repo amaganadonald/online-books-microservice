@@ -30,7 +30,7 @@ public class AddressRestController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ApiResponse<AddressResponseDTO>> getAddressById(@PathVariable Long id) {
 		AddressResponseDTO addressResponseDTO = addressService.getAddressById(id);
-		return new ResponseEntity<>(ApiResponse.single(StatusResponse.SUCCESS, addressResponseDTO), HttpStatus.FOUND);
+		return new ResponseEntity<>(ApiResponse.single(StatusResponse.SUCCESS, addressResponseDTO), HttpStatus.OK);
 	}
 
 	@PostMapping

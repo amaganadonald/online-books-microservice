@@ -37,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
 			 throw new IllegalArgumentException("Invalid user ID");
 		try {
 			Optional<Category> category = categoryRepository.findById(id);
-            log.info("CategoryService:getCategoryByIds fetch address with message::{}", category.toString());
+            log.info("CategoryService:getCategoryByIds fetch category with message::{}", category.toString());
 			return category.orElse(null);
 			
 		} catch (Exception e) {

@@ -1,11 +1,8 @@
 package com.amagana.settings_service;
 
 import com.amagana.settings_service.dto.*;
-import com.amagana.settings_service.entity.Address;
-import com.amagana.settings_service.entity.BaseEntity;
 import com.amagana.settings_service.entity.Category;
 import com.amagana.settings_service.enums.StatusResponse;
-import com.amagana.settings_service.mappers.AddressMapper;
 import com.amagana.settings_service.repository.AddressRepository;
 import com.amagana.settings_service.repository.CategoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,16 +34,16 @@ class SettingsServiceApplicationTests {
 
 
 	 CategoryRequestDTO categoryRequestDTO;
-	AddressRequestDTO addressRequestDTO;
-
+	 AddressRequestDTO addressRequestDTO;
+	 Long categoryId;
+	 Long addressId;
 	@Autowired
 	CategoryRepository categoryRepository;
 
 	@Autowired
 	AddressRepository addressRepository;
 
-	Long addressId;
-	Long categoryId;
+
 	@BeforeEach
 	void beforeEach() {
 		categoryRequestDTO = CategoryRequestDTO.builder()
@@ -67,19 +64,12 @@ class SettingsServiceApplicationTests {
 				.addressPhone("6894555")
 				.addressProfessionalPhone("698744")
 				.build();
-		categoryRepository.save(Category.builder().categoryDescription("Roman in  book").categoryName("Roman").build());
-
-		categoryId=categoryRepository.findAll().getFirst().getId();
-
-		addressRepository.save(Address.builder()
-				.addressCity("Huberty")
-				.addressName("Jean Pièrre")
-				.addressEmail("huberty@lux.lu")
-				.addressNumber(37).build());
-		addressId =  addressRepository.findAll().stream().map(AddressMapper.INSTANCE::addressToAddressResponseDTO)
-				.map(AddressResponseDTO::id)
-				.findFirst()
-				.orElse(null);
+		ResponseEntity<ApiResponse<CategoryResponseDTO>> response = testRestTemplate.exchange("/api/v1/category", HttpMethod.POST, new HttpEntity<>(categoryRequestDTO),
+				new ParameterizedTypeReference<>() {});
+		categoryId = response.getBody().getResults().id();
+		ResponseEntity<ApiResponse<AddressResponseDTO>> response1 = testRestTemplate.exchange("/api/v1/address", HttpMethod.POST, new HttpEntity<>(addressRequestDTO),
+				new ParameterizedTypeReference<>() {});
+		addressId = response1.getBody().getResults().id();
 	}
 
 
@@ -89,7 +79,7 @@ class SettingsServiceApplicationTests {
 	void shouldAddNewCategory() {
 
 		ResponseEntity<ApiResponse<CategoryResponseDTO>> response = testRestTemplate.exchange("/api/v1/category", HttpMethod.POST,
-				new HttpEntity<>(categoryRequestDTO), new ParameterizedTypeReference<ApiResponse<CategoryResponseDTO>>() {});
+				new HttpEntity<>(categoryRequestDTO), new ParameterizedTypeReference<>() {});
 		ApiResponse<CategoryResponseDTO> categoryResponseDTO = response.getBody();
 		AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assert categoryResponseDTO != null;
@@ -103,18 +93,19 @@ class SettingsServiceApplicationTests {
 	void shouldGetAllCategory() {
 		ResponseEntity<ApiResponse<List<CategoryResponseDTO>>> response = testRestTemplate.exchange("/api/v1/category", HttpMethod.GET,
 				null,
-				new ParameterizedTypeReference<ApiResponse<List<CategoryResponseDTO>>>() {});
+				new ParameterizedTypeReference<>() {});
 		ApiResponse<List<CategoryResponseDTO>> content = response.getBody();
 		AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assert content != null;
-        AssertionsForClassTypes.assertThat(content.getResults().size()).isEqualTo(0);
+        AssertionsForClassTypes.assertThat(content.getResults().size()).isEqualTo(3);
 	}
 
 	@Test
 	@Order(3)
 	void shouldGetCategoryById() {
-		ResponseEntity<ApiResponse<CategoryResponseDTO>> response = testRestTemplate.exchange("/api/v1/category/" + categoryId, HttpMethod.GET,
-				null, new ParameterizedTypeReference<ApiResponse<CategoryResponseDTO>>() {});
+
+		ResponseEntity<ApiResponse<CategoryResponseDTO>> response = testRestTemplate.exchange("/api/v1/category/"+categoryId, HttpMethod.GET,
+				null, new ParameterizedTypeReference<>() {});
 		ApiResponse<CategoryResponseDTO> categoryResponseDTO = response.getBody();
 		AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assert categoryResponseDTO != null;
@@ -129,7 +120,7 @@ class SettingsServiceApplicationTests {
 				.categoryName("Redemption")
 				.build();
 		ResponseEntity<ApiResponse<CategoryResponseDTO>> response = testRestTemplate.exchange("/api/v1/category/" + categoryId,
-				HttpMethod.PUT, new HttpEntity<>(categoryRequestDTO1), new ParameterizedTypeReference<ApiResponse<CategoryResponseDTO>>() {});
+				HttpMethod.PUT, new HttpEntity<>(categoryRequestDTO1), new ParameterizedTypeReference<>() {});
 		ApiResponse<CategoryResponseDTO> categoryResponseDTO = response.getBody();
 		AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 		assert categoryResponseDTO != null;
@@ -139,7 +130,7 @@ class SettingsServiceApplicationTests {
 	@Test
 	void shouldAddNewAddress() {
 		ResponseEntity<ApiResponse<AddressResponseDTO>> response = testRestTemplate.exchange("/api/v1/address",
-				HttpMethod.POST, new HttpEntity<>(addressRequestDTO), new ParameterizedTypeReference<ApiResponse<AddressResponseDTO>>() {});
+				HttpMethod.POST, new HttpEntity<>(addressRequestDTO), new ParameterizedTypeReference<>() {});
 		ApiResponse<AddressResponseDTO> addressResponseDTO = response.getBody();
 		AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 		assert addressResponseDTO != null;
@@ -153,12 +144,11 @@ class SettingsServiceApplicationTests {
 		ApiResponse<List<AddressResponseDTO>> content = response.getBody();
 		AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assert content != null;
-        AssertionsForClassTypes.assertThat(content.getResults().size()).isEqualTo(1);
+        AssertionsForClassTypes.assertThat(content.getResults().size()).isEqualTo(3);
 	}
 
 	@Test
 	void shouldGetAddressById() {
-
 		ResponseEntity<ApiResponse<AddressResponseDTO>> response = testRestTemplate.exchange("/api/v1/address/"+addressId, HttpMethod.GET,
 				null, new ParameterizedTypeReference<ApiResponse<AddressResponseDTO>>() {});
 		ApiResponse<AddressResponseDTO> addressResponseDTO = response.getBody();

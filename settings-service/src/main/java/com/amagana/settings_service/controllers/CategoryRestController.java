@@ -29,7 +29,7 @@ public class CategoryRestController {
 	@GetMapping("/{id}")
 	public ResponseEntity<ApiResponse<CategoryResponseDTO>> getCategoryById(@PathVariable Long id) {
 		CategoryResponseDTO category = categoryService.getCategoryById(id);
-		return new ResponseEntity<>(ApiResponse.single(StatusResponse.SUCCESS, category), HttpStatus.FOUND);
+		return new ResponseEntity<>(ApiResponse.single(StatusResponse.SUCCESS, category), HttpStatus.OK);
 	}
 	
 	@PostMapping

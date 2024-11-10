@@ -2,3 +2,19 @@ settings:
   params:
     x: 21
     y: 22
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/settings-service
+    username: postgres
+    password: donald
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  health:
+    refresh:
+      enabled: true

@@ -6,4 +6,5 @@ RUN mvn clean package -DskipTests
 FROM openjdk:21-jdk-slim
 VOLUME /tmp
 COPY --from=build /target/*.jar eureka-server.jar
-ENTRYPOINT ["java", "-jar", "eureka-server.jar", "--spring.profiles.active=prod"]
+# ENTRYPOINT ["java", "-jar", "eureka-server.jar", "--spring.profiles.active=prod"]
+ENTRYPOINT ["java", "-jar", "eureka-server.jar"]

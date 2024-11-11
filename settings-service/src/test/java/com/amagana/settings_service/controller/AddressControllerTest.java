@@ -69,7 +69,7 @@ class AddressControllerTest {
 	@Test
 	void shouldReturnAddressById() throws Exception {
 		when(addressService.getAddressById(1L)).thenReturn(addressResponseDTO);
-		this.mockMvc.perform(get("/api/v1/address/"+1)).andDo(print()).andExpect(status().isFound())
+		this.mockMvc.perform(get("/api/v1/address/"+1)).andDo(print()).andExpect(status().isOk())
 		.andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.results.id").value("1"))
         .andExpect(MockMvcResultMatchers.jsonPath("$.results.addressName").value("Jean Huberty"))

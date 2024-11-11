@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,8 +52,8 @@ class CategoryServiceTest {
 				.categoryDescription("Roman en livre")
 				.categoryName("Roman")
 				.build();
-		when(CategoryMapper.INSTANCE.categoryRequestDTOToCategory(categoryRequestDTO)).thenReturn(category);
-		when(CategoryMapper.INSTANCE.categoryToCategoryResponseDTO(category)).thenReturn(categoryResponseDTO);
+		//when(CategoryMapper.INSTANCE.categoryRequestDTOToCategory(categoryRequestDTO)).thenReturn(category);
+		//when(CategoryMapper.INSTANCE.categoryToCategoryResponseDTO(category)).thenReturn(categoryResponseDTO);
 	}
 
 	
@@ -67,7 +68,7 @@ class CategoryServiceTest {
 	
 	@Test
 	void shouldAddCategoryThenReturnCategoryResponseDTO() {
-		when(categoryRepository.save(category)).thenReturn(category);
+		when(categoryRepository.save(any(Category.class))).thenReturn(category);
 		CategoryResponseDTO cat = categoryServiceImpl.addCategory(categoryRequestDTO);
 		assertEquals("Roman", cat.categoryName());
 		assertNotNull(cat);

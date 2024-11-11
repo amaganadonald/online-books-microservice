@@ -9,6 +9,11 @@ spring:
     username: postgres
     password: donald
 
+  config:
+    import: optional:configserver:http://localhost:9899
+    cloud:
+      config:
+        uri: http://localhost:9899
 
 management:
   endpoints:
@@ -18,3 +23,5 @@ management:
   health:
     refresh:
       enabled: true
+server:
+  port: 9891

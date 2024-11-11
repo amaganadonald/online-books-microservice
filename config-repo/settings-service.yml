@@ -5,19 +5,14 @@ settings:
 
 spring:
   datasource:
-    #url: ${SPRING_DATASOURCE_URL}
-    #username: ${SPRING_DATASOURCE_USERNAME}
-    #password: ${SPRING_DATASOURCE_PASSWORD}
-    url: jdbc:postgresql://localhost:5432/settings-service
-    username: postgres
-    password: donald
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   config:
-    - import: optional:configserver:http://localhost:9899
-    - import: optional:configserver:${CONFIG_SERVICE_URI}
+    import: optional:configserver:${CONFIG_SERVICE_URI}
   cloud:
     config:
-      - uri: ${CONFIG_SERVICE_URI}
-      - uri: http://localhost:9899
+      uri: ${CONFIG_SERVICE_URI}
 server:
   port: 9891
 

@@ -15,6 +15,13 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: "health,refresh,info"
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+  endpoint:
     health:
-      show-details: always
+      probes:
+        enabled: true

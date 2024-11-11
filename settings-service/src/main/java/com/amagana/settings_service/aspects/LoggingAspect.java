@@ -20,7 +20,7 @@ public class LoggingAspect {
 	
 	@Before(value = "loggingPointCut()")
 	public void loggingBefore(JoinPoint joinpoint) {
-		log.info("Before excute method ::"+ joinpoint.getSignature());
+        log.info("Before execute method ::{}", joinpoint.getSignature());
 	}
 	
 	@AfterReturning(value="loggingPointCut()", returning = "result")

@@ -1,9 +1,9 @@
 services:
   eureka-server:
-    #image: book-shop-discovery-service:v1
-    build:
-      context: ./discovery-service
-      dockerfile: Dockerfile
+    image: discovery-service:v1
+    #build:
+    #  context: ./discovery-service
+    #  dockerfile: Dockerfile
     container_name: DISCOVERY-SERVICE
     ports:
       - '8761:8761'
@@ -11,14 +11,11 @@ services:
       - '8761'
     networks:
       - book-shop-network
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
-      interval: 10s
 
   config-service:
-    #image: book-shop-config-service:v1
-    build: ./config-server
-    container_name: CONFIG-SERVICE
+    image: config-service:v1
+    #build: ./config-server
+    #container_name: CONFIG-SERVICE
     restart: always
     ports:
       - '9899:9899'
@@ -28,8 +25,8 @@ services:
       DISCOVERY-SERVICE-URL: http://eureka-server:8761/eureka
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka
     depends_on:
-      eureka-server:
-        condition: service_healthy
+      - eureka-server
+
   postgres:
     image: 'postgres'
     container_name: 'postgres'
@@ -86,11 +83,7 @@ services:
     networks:
       - book-shop-network
     depends_on:
-      config-service:
-        condition: service_healthy
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9891/actuator/health" ]
-      interval: 10s
+      - config-service
 
     environment:
       CONFIG_SERVICE_URI: http://config-service:9899

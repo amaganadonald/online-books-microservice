@@ -1,26 +1,29 @@
 package com.amagana.settings_service;
 
 import com.amagana.settings_service.dto.*;
-import com.amagana.settings_service.entity.Category;
 import com.amagana.settings_service.enums.StatusResponse;
 import com.amagana.settings_service.repository.AddressRepository;
 import com.amagana.settings_service.repository.CategoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
 import org.assertj.core.api.AssertionsForClassTypes;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -35,10 +38,10 @@ class SettingsServiceApplicationTests {
 	private ObjectMapper objectMapper;
 
 
-	 CategoryRequestDTO categoryRequestDTO;
-	 AddressRequestDTO addressRequestDTO;
-	 Long categoryId;
-	 Long addressId;
+	CategoryRequestDTO categoryRequestDTO;
+	AddressRequestDTO addressRequestDTO;
+	Long categoryId;
+	Long addressId;
 	@Autowired
 	CategoryRepository categoryRepository;
 
@@ -98,8 +101,8 @@ class SettingsServiceApplicationTests {
 				new ParameterizedTypeReference<>() {});
 		ApiResponse<List<CategoryResponseDTO>> content = response.getBody();
 		AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assert content != null;
-        AssertionsForClassTypes.assertThat(content.getResults().size()).isEqualTo(3);
+		assert content != null;
+		AssertionsForClassTypes.assertThat(content.getResults().size()).isEqualTo(3);
 	}
 
 	@Test
@@ -145,8 +148,8 @@ class SettingsServiceApplicationTests {
 				HttpMethod.GET, null, new ParameterizedTypeReference<ApiResponse<List<AddressResponseDTO>>>() {});
 		ApiResponse<List<AddressResponseDTO>> content = response.getBody();
 		AssertionsForClassTypes.assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assert content != null;
-        AssertionsForClassTypes.assertThat(content.getResults().size()).isEqualTo(3);
+		assert content != null;
+		AssertionsForClassTypes.assertThat(content.getResults().size()).isEqualTo(3);
 	}
 
 	@Test

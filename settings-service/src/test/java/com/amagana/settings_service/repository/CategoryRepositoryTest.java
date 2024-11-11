@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
-@TestMethodOrder(MethodOrderer.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CategoryRepositoryTest {
 
 	@Autowired
@@ -24,6 +24,7 @@ class CategoryRepositoryTest {
 	
 	@BeforeEach
 	void setUp() {
+
 		category = Category.builder()
 				.categoryDescription("Roman in book")
 				.categoryName("Roman")

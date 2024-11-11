@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 		"spring.datasource.url=jdbc:h2:mem:testdb",
 		"spring.jpa.hibernate.ddl-auto=create-drop"
 })
-@TestMethodOrder(MethodOrderer.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @ActiveProfiles("settings-service-test")
 class AddressRepositoryTest {
 	
@@ -28,6 +28,7 @@ class AddressRepositoryTest {
 	
 	@BeforeEach
 	void setUp() {
+
 		addressRepository.save(Address.builder().addressCity("Mulhenbach").addressEmail("donald9do@gmail.com")
 				.addressName("Huberty").addressNumber(37).addressPhone("495463737").addressProfessionalPhone("4345664545")
 				.build());
@@ -62,7 +63,7 @@ class AddressRepositoryTest {
 	@Rollback(value = false)
 	void testFindAllAddress() {
 		List<Address> addressRequest = addressRepository.findAll();
-		assertEquals(3, addressRequest.size());
+		assertEquals(10, addressRequest.size());
 		assertEquals("Mulhenbach", addressRequest.getFirst().getAddressCity());
 	}
 	
@@ -91,7 +92,7 @@ class AddressRepositoryTest {
 	@Order(4)
 	@Rollback(value = false)
 	void shouldUpdateAddressThrow() {
-		Address address1 = addressRepository.findById(8L).orElse(null);
+		Address address1 = addressRepository.findById(40L).orElse(null);
 		assertNull(address1);
 	}
 	

@@ -11,7 +11,15 @@ spring:
     #url: jdbc:postgresql://localhost:5432/settings-service
     #username: postgres
     #password: donald
-
+  config:
+    #import: optional:configserver:http://localhost:9899
+    import: optional:configserver:${CONFIG_SERVICE_URI}
+    cloud:
+      config:
+        uri: ${CONFIG_SERVICE_URI}
+        #uri: http://localhost:9899
+server:
+  port: 9891
 
 management:
   endpoints:

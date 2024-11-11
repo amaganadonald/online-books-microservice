@@ -67,7 +67,7 @@ class CategoryControllerTest {
 	@Test
 	void shouldReturnCategoryById() throws Exception {
 		when(categoryService.getCategoryById(1L)).thenReturn(categoryResponseDTO);
-		this.mockMvc.perform(get("/api/v1/category/"+1)).andDo(print()).andExpect(status().isFound())
+		this.mockMvc.perform(get("/api/v1/category/"+1)).andDo(print()).andExpect(status().isOk())
 		.andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"))
 		.andExpect(MockMvcResultMatchers.jsonPath("$.results.id").value("1"))
         .andExpect(MockMvcResultMatchers.jsonPath("$.results.categoryDescription").value("Roman in book"))
@@ -101,7 +101,7 @@ class CategoryControllerTest {
 				 .contentType(MediaType.APPLICATION_JSON)
 				 .content(objectMapper.writeValueAsString(categoryRequestDTO)))
                  .andDo(print())
-		         .andExpect(status().isAccepted())
+		         .andExpect(status().isOk())
 		         .andExpect(MockMvcResultMatchers.jsonPath("$.results.id").value("1"))
 	             .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"))
 	             .andExpect(MockMvcResultMatchers.jsonPath("$.results.categoryDescription").value("Roman in book"))

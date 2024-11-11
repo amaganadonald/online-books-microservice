@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -79,7 +80,7 @@ class AddressServiceTest {
 	
 	@Test
 	void shouldAddAddressThenReturnAddressResponseDTO() {
-		when(addressRepository.save(address)).thenReturn(address);
+		when(addressRepository.save(any(Address.class))).thenReturn(address);
 		AddressResponseDTO cat = addressServiceImpl.addAddress(addressRequestDTO);
 		assertEquals(37, cat.addressNumber());
 		assertEquals("Mulhenbach", cat.addressCity());
